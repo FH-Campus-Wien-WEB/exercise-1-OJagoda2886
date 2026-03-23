@@ -7,6 +7,56 @@
     <title>Movies!</title>
     <style>
         /* Part 3: Your styling goes here */
+        
+    /* Body */
+    body {
+        font-family: 'Trebuchet MS', sans-serif;
+        background-color: #ebd0db; /* very light pink */
+        color: #4a2c40;
+    }
+
+    /* Images */
+    img {
+        border-radius: 15px;
+        max-width: 100%;
+        box-shadow: 0 4px 10px rgba(66, 18, 66, 0.4);
+        display: block;
+        margin: 0 auto;
+    }
+
+    /* Title */
+    h1 {
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #b030b0; /* violet */
+        text-align: center;
+    }
+
+    /* Movie cards */
+    article {
+        background-color: #ffe4f2; /* soft pink */
+        border-radius: 20px;
+        margin: 15px;
+        padding: 15px;
+        box-shadow: 0 6px 15px rgba(180, 100, 180, 0.3);
+    }
+
+    /* Span (general) */
+    span {
+        margin-right: 8px;
+    }
+
+    /* Genre tags */
+    .genre {
+        background-color: #e0bbff; /* pastel violet */
+        padding: 5px 10px;
+        border-radius: 12px;
+        border: 1px solid #c084f5;
+        display: inline-block;
+        color: #4a2c40;
+        font-size: 0.9em;
+    }
+    
     </style>
     <script>
         function reverseString(s) {
@@ -18,8 +68,118 @@
             xhr.onload = function () {
                 const bodyElement = document.querySelector("body")
                 if (xhr.status == 200) {
-		            /* Part 2: Build the HTML elements here and append them to the body */ 
-                    bodyElement.append(reverseString(xhr.responseText))
+		            /* Part 2: Build the HTML elements here and append them to the body */
+                    const movies = JSON.parse(xhr.responseText);
+
+                    
+                    for (let i = 0; i < movies.length; i++) {
+                        
+                        const article = document.createElement("article");
+                        
+                        // Poster
+                        const posterimg = document.createElement("img");
+                        posterimg.src = movies[i]["Poster"];
+                        article.appendChild(posterimg);
+
+                        // Title
+                        const titleh = document.createElement("h1");
+                        titleh.textContent = movies[i]["Title"];
+                        article.appendChild(titleh);
+
+                        // Runtime
+                        const runtime = movies[i]["Runtime"];
+
+
+                        const hours = Math.floor(runtime / 60);
+                        const remainingMinutes = runtime % 60;
+                        const readyruntime = hours + "h " + remainingMinutes + "min"
+
+                        
+                        const Runtime = document.createElement("p");
+                        Runtime.textContent = readyruntime;
+                        article.appendChild(Runtime);
+
+                        // Released
+                        const Releasedp = document.createElement("p");
+                        Releasedp.textContent = movies[i]["Released"];
+                        article.appendChild(Releasedp);
+
+                        // Genre
+                        const genres = movies[i]["Genres"];
+
+                        genres.forEach(genre => {
+                            const span = document.createElement("span");
+                            span.textContent = genre;
+                            span.classList.add("genre"); 
+
+                            article.appendChild(span);
+                        });
+                        // Plot
+                        const plotp = document.createElement("p");
+                        plotp.textContent = movies[i]["Plot"];
+                        article.appendChild(plotp);
+
+                        // Directors
+
+                        // Director title
+                        const directorTitle = document.createElement("h2");
+                        directorTitle.textContent = "Directors";
+                        article.appendChild(directorTitle);
+
+                        const directorList = document.createElement("ul");
+
+                        // loop directly through array
+                        movies[i]["Directors"].forEach(directorName => {
+                        const listItem = document.createElement("li");
+                        listItem.textContent = directorName;
+                        directorList.appendChild(listItem);
+                        });
+
+                        article.appendChild(directorList);
+
+                        
+                        // Writers
+
+                        // Writers title
+                        const writerTitle = document.createElement("h2");
+                        writerTitle.textContent = "Writers";
+                        article.appendChild(writerTitle);
+
+                        const writerList = document.createElement("ul");
+
+                        // loop directly through array
+                        movies[i]["Writers"].forEach(writerName => {
+                        const listwr = document.createElement("li");
+                        listwr.textContent = writerName;
+                        writerList.appendChild(listwr);
+                        });
+
+                        article.appendChild(writerList);
+
+                         // Actors
+
+                        // Actors title
+                        const actorTitle = document.createElement("h2");
+                        actorTitle.textContent = "Actors";
+                        article.appendChild(actorTitle);
+
+                        const actorList = document.createElement("ul");
+
+                        // loop directly through array
+                        movies[i]["Actors"].forEach(actorName => {
+                        const listact = document.createElement("li");
+                        listact.textContent = actorName;
+                        actorList.appendChild(listact);
+                        });
+
+                        article.appendChild(actorList);
+
+                        document.body.appendChild(article);
+                        //bodyElement.append(movies[i])
+                    }
+
+
+            
                 } else {
                     bodyElement.append("Daten konnten nicht geladen werden, Status " + xhr.status + " - " + xhr.statusText)
                 }
